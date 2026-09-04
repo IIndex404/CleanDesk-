@@ -1,0 +1,62 @@
+# Python cache and test output
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+*.egg
+*.spec
+
+# IDE and editor state
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local.json
+user_data*.json
+settings*.json
+preferences*.json
+local_data/
+user_data/
+data/
+!tests/fixtures/
+!tests/fixtures/**/*.json
+
+# Logs and temporary test data
+*.log
+logs/
+tmp/
+temp/
+test_data/
+original_ui_test_data/
+
+# Local Codex working backups
+.codex_backup_*/
+
+# Unused legacy prototype asset kept only in the local workspace
+app/assets/milk_dragon_sprites.png
+
+# Windows metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
