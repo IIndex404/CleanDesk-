@@ -2,15 +2,24 @@ from __future__ import annotations
 
 import sys
 
-from PySide6.QtCore import QTimer
-from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QApplication, QMenu, QStyle, QSystemTrayIcon
-
-from app.services.windows_desktop import set_native_desktop_icons_visible
-from app.ui.main_window import MainWindow
-
-
 def main() -> int:
+    if "--desktop-guard" in sys.argv:
+        try:
+            guard_index = sys.argv.index("--desktop-guard")
+            process_id = int(sys.argv[guard_index + 1])
+        except (ValueError, IndexError):
+            return 2
+        from app.services.desktop_guard import run_guard
+
+        return run_guard(process_id)
+
+    from PySide6.QtCore import QTimer
+    from PySide6.QtGui import QAction
+    from PySide6.QtWidgets import QApplication, QMenu, QStyle, QSystemTrayIcon
+
+    from app.services.windows_desktop import set_native_desktop_icons_visible
+    from app.ui.main_window import MainWindow
+
     if "--restore-icons" in sys.argv:
         return 0 if set_native_desktop_icons_visible(True) else 1
 

@@ -69,6 +69,14 @@ Windows 桌面经常同时承载应用入口、临时文件、项目资料和系
 
 环境要求：Windows 10/11、Python 3.10 或更高版本。
 
+### 直接下载使用
+
+不想安装 Python 的用户，可以在仓库右侧的 **Releases** 页面下载 `CleanDesk-Windows-x64.zip`。完整解压后双击 `CleanDesk.exe` 即可运行，不需要安装，也不会显示广告。
+
+> 当前程序尚未购买代码签名证书。Windows 首次运行时可能显示 SmartScreen 提示，请确认下载地址来自本仓库后，选择“更多信息 → 仍要运行”。不要直接在压缩包内启动程序。
+
+### 从源码运行
+
 ```powershell
 git clone https://github.com/IIndex404/CleanDesk-.git
 cd CleanDesk-
@@ -108,6 +116,7 @@ CleanDesk/
 │  ├─ services/          # 扫描、分类、启动及 Windows 集成
 │  └─ ui/                # 主窗口、工作台、卡片与频谱组件
 ├─ docs/images/          # README 产品截图
+├─ scripts/              # Windows 发布包构建脚本
 ├─ tests/                # 自动化测试
 ├─ main.py               # 应用入口
 └─ requirements.txt      # Python 依赖
@@ -138,5 +147,5 @@ CleanDesk/
 
 - 仅支持 Windows；桌面接管依赖 Explorer 与 Win32 API。
 - 应用用途分类基于关键词规则，未覆盖的软件会进入“其他”。
-- 目前没有安装包和自动更新功能，需要通过 Python 环境运行。
+- 目前提供免安装 ZIP，不包含安装向导和自动更新功能。
 - 多显示器、不同缩放比例和第三方桌面外壳仍需要更广泛的兼容性验证。

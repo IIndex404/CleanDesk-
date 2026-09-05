@@ -166,10 +166,26 @@ class WindowsDesktopController:
         """独立守护：主程序异常退出时也恢复 Explorer 桌面图标。"""
         if sys.platform != "win32" or self._guard_process is not None:
             return
-        guard_script = Path(__file__).with_name("desktop_guard.py")
+        command, working_directory = _guard_command(os.getpid())
         creation_flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
         self._guard_process = subprocess.Popen(
-            [sys.executable, str(guard_script), str(os.getpid())],
-            cwd=str(guard_script.parents[2]),
+            command,
+            cwd=working_directory,
             creationflags=creation_flags,
         )
+
+
+def _guard_command(process_id: int) -> tuple[list[str], str]:
+    """Return a guard command that works from source and PyInstaller builds."""
+    if getattr(sys, "frozen", False):
+        executable = Path(sys.executable).resolve()
+        return (
+            [str(executable), "--desktop-guard", str(process_id)],
+            str(executable.parent),
+        )
+
+    guard_script = Path(__file__).with_name("desktop_guard.py").resolve()
+    return (
+        [sys.executable, str(guard_script), str(process_id)],
+        str(guard_script.parents[2]),
+    )
