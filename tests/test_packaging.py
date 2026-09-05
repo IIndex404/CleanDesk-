@@ -16,7 +16,7 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(command[0], sys.executable)
         self.assertTrue(command[1].endswith("desktop_guard.py"))
         self.assertEqual(command[2], "1234")
-        self.assertEqual(Path(working_directory).name, "CleanDesk")
+        self.assertEqual(Path(working_directory), Path(command[1]).parents[2])
 
     def test_frozen_guard_relaunches_packaged_executable(self):
         packaged_executable = r"C:\Apps\CleanDesk\CleanDesk.exe"

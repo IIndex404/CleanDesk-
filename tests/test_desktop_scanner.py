@@ -62,7 +62,10 @@ class DesktopScannerTests(unittest.TestCase):
                 },
             ):
                 locations = get_desktop_locations()
-            self.assertEqual([location.path for location in locations], [redirected_user, redirected_public])
+            self.assertEqual(
+                [location.path for location in locations],
+                [redirected_user.resolve(), redirected_public.resolve()],
+            )
             self.assertEqual([location.source for location in locations], ["user", "public"])
 
     @unittest.skipUnless(sys.platform == "win32", "Windows hidden attribute test")
