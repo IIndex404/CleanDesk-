@@ -154,7 +154,11 @@ class WindowsDesktopController:
         hidden = set_native_desktop_icons_visible(False)
         self.native_icons_hidden = hidden
         if hidden:
-            self._start_guard()
+            try:
+                self._start_guard()
+            except OSError:
+                self.restore()
+                return False
         return hidden
 
     def restore(self) -> None:
@@ -172,6 +176,8 @@ class WindowsDesktopController:
             command,
             cwd=working_directory,
             creationflags=creation_flags,
+            # The guard must survive onefile's temporary-directory cleanup.
+            env={**os.environ, "PYINSTALLER_RESET_ENVIRONMENT": "1"},
         )
 
 

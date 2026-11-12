@@ -1,2 +1,2 @@
-PySide6
+PySide6-Essentials
 pycaw==20251023

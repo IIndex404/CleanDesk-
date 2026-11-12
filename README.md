@@ -1,151 +1,36 @@
 # CleanDesk
 
-> 把杂乱的 Windows 桌面变成可浏览、可点击的分类工作台。
+Windows 桌面分类启动器。自动分组、点击打开，不移动或删除原文件。
 
-CleanDesk 是一个面向 Windows 10/11 的桌面分组启动器。它读取用户当前可见的桌面项目，按应用用途或文件格式自动分组，并以半透明卡片叠加在当前壁纸上。当前版本专注于“看清、找到、打开”，不会移动、重命名或删除用户文件。
+**[下载 Windows 免安装 EXE](https://github.com/IIndex404/CleanDesk-/releases/latest/download/CleanDesk.exe)** · Windows 10/11，64 位
 
-![CleanDesk 桌面接管效果](docs/images/cleandesk-preview.jpg)
+下载后双击 `CleanDesk.exe`，无需安装 Python。首次启动需要几秒钟。
 
-## 产品定位
+![CleanDesk](docs/images/cleandesk-preview.jpg)
 
-Windows 桌面经常同时承载应用入口、临时文件、项目资料和系统图标。传统文件夹整理会改变用户原有路径，手动分组又难以持续维护。CleanDesk 选择了一条更轻量的路径：保留原文件位置，在桌面视觉层提供实时分类和快速启动。
+## 使用
 
-这个版本验证了三个核心产品假设：
+- 自动归类桌面应用、文件和文件夹，支持公共桌面与 OneDrive 桌面。
+- 桌面变化自动刷新，也可在系统托盘右键手动刷新。
+- 点击卡片中的项目打开；托盘右键选择「退出并恢复原桌面」关闭。
+- 顶部频谱随系统播放的声音变化。
 
-- 用户需要的是更低的寻找成本，而不一定是自动搬运文件。
-- 应用快捷方式适合按用途分组，普通文件更适合按扩展名明确分组。
-- 公共桌面和系统图标应该被看见，但必须作为受保护项目处理。
+程序暂未签名。首次运行可能出现 Windows SmartScreen 提示，请核对下载来源。
 
-## 当前已实现
-
-- 扫描当前用户桌面，兼容 Windows Known Folder、OneDrive 和组策略重定向。
-- 合并 Public Desktop 公共桌面快捷方式。
-- 读取已启用的“此电脑、回收站、网络、控制面板、用户文件”等 Shell 桌面图标。
-- 应用快捷方式按 AI 工具、编程开发、办公软件、浏览器、沟通社交等用途进行规则分类。
-- 普通文件按扩展名独立分组，例如 DOCX、XLSX、PDF、TXT，不混入应用类别。
-- 根据桌面尺寸自适应排列左右两侧的磨砂卡片，并保留中间壁纸视觉区。
-- 监听桌面目录变化，支持手动刷新和项目点击启动。
-- 使用 Windows 默认输出设备的峰值驱动顶部音乐频谱；不读取麦克风内容。
-- 支持桌面接管模式和普通窗口预览模式。
-- 退出或异常结束时尝试恢复 Explorer 原生桌面图标。
-
-## 安全边界
-
-- 当前版本只读取和展示桌面项目，不执行文件整理操作。
-- Public Desktop 与 Shell 虚拟项目会标记为受保护，不参与未来可能加入的整理逻辑。
-- `desktop.ini`、`Thumbs.db` 等系统元数据不会显示。
-- 单个损坏快捷方式、云端占位文件或权限受限项目不会中断整次扫描。
-- CleanDesk 不是 Explorer 的替代品；如果桌面接管失败，会回退到普通窗口。
-
-## 产品流程
-
-```text
-启动 CleanDesk
-    ↓
-解析用户桌面、公共桌面与可见 Shell 图标
-    ↓
-生成统一桌面项目模型并标记受保护项
-    ↓
-快捷方式按用途分类，普通文件按扩展名分类
-    ↓
-计算左右面板布局并渲染磨砂卡片
-    ↓
-用户点击项目 → 交给 Windows 从原路径打开
-    ↓
-桌面发生变化 → 自动重新扫描并刷新
-```
-
-## 技术栈
-
-- Python 3.10+
-- PySide6：桌面界面、布局、文件监听与系统托盘
-- pycaw / Windows Core Audio：读取默认输出设备峰值
-- ctypes / Win32 API：Known Folder、Explorer 桌面层和系统图标控制
-- unittest：分类、桌面扫描、非破坏性刷新和音乐频谱测试
-
-当前分类采用透明、可维护的关键词与扩展名规则，不包含机器学习模型或云端 AI 服务。
-
-## 本地运行
-
-环境要求：Windows 10/11、Python 3.10 或更高版本。
-
-### 直接下载使用
-
-不想安装 Python 的用户，可以在仓库右侧的 **Releases** 页面下载 `CleanDesk-Windows-x64.zip`。完整解压后双击 `CleanDesk.exe` 即可运行，不需要安装，也不会显示广告。
-
-> 当前程序尚未购买代码签名证书。Windows 首次运行时可能显示 SmartScreen 提示，请确认下载地址来自本仓库后，选择“更多信息 → 仍要运行”。不要直接在压缩包内启动程序。
-
-### 从源码运行
+## 开发
 
 ```powershell
-git clone https://github.com/IIndex404/CleanDesk-.git
-cd CleanDesk-
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python main.py
+.\.venv\Scripts\python -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python main.py --window
 ```
 
-默认启动桌面接管模式。普通窗口预览：
+默认运行 `main.py` 进入桌面模式；`--restore-icons` 可恢复原生桌面图标。
+
+测试与构建单文件 EXE：
 
 ```powershell
-python main.py --window
+./scripts/build_windows.ps1 -Python ./.venv/Scripts/python.exe
 ```
 
-如果需要单独恢复 Explorer 原生桌面图标：
-
-```powershell
-python main.py --restore-icons
-```
-
-## 测试
-
-```powershell
-python -m unittest discover -s tests -v
-```
-
-当前测试覆盖规则分类、用户与公共桌面合并、Shell 项目保护、隐藏项目扫描、界面刷新不修改桌面文件，以及音乐频谱的触发与回落逻辑。
-
-## 项目结构
-
-```text
-CleanDesk/
-├─ app/
-│  ├─ assets/            # 界面资源
-│  ├─ models/            # 桌面项目数据模型
-│  ├─ services/          # 扫描、分类、启动及 Windows 集成
-│  └─ ui/                # 主窗口、工作台、卡片与频谱组件
-├─ docs/images/          # README 产品截图
-├─ scripts/              # Windows 发布包构建脚本
-├─ tests/                # 自动化测试
-├─ main.py               # 应用入口
-└─ requirements.txt      # Python 依赖
-```
-
-## 演示说明
-
-上方截图展示的是当前版本在真实 Windows 桌面中的运行效果。演示时建议依次展示：
-
-1. 启动后从原生桌面切换到分类工作台。
-2. 用户桌面、公共快捷方式和系统图标被统一收录。
-3. 新建或删除一个测试文件，观察分类卡片自动刷新。
-4. 点击任意项目，确认它从原路径打开。
-5. 播放与暂停音乐，观察顶部频谱响应和回落。
-6. 从托盘退出，确认原生桌面图标恢复。
-
-## 后续 AI 迭代路线
-
-以下内容是规划方向，尚未在当前版本实现：
-
-- 可解释的智能分类建议：在本地规则基础上给出分类候选和原因，由用户确认后生效。
-- 个性化规则学习：根据用户纠正记录调整关键词、分组顺序和卡片布局。
-- 整理前预演与撤销：任何移动操作先展示影响范围，并保留可追溯的恢复记录。
-- 重复与过期内容提示：仅提供建议，不在未经确认时删除文件。
-- 隐私优先的本地推理选项：尽量避免上传文件名和目录信息。
-
-## 当前限制
-
-- 仅支持 Windows；桌面接管依赖 Explorer 与 Win32 API。
-- 应用用途分类基于关键词规则，未覆盖的软件会进入“其他”。
-- 目前提供免安装 ZIP，不包含安装向导和自动更新功能。
-- 多显示器、不同缩放比例和第三方桌面外壳仍需要更广泛的兼容性验证。
+产物：`release/CleanDesk.exe`。推送 `v*` 标签会自动构建并发布至 Releases。
